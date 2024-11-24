@@ -1,102 +1,102 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = 3000;
-const db = require('./config/db'); 
-const bcrypt = require('bcrypt');
+const db = require("./config/db");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const session = require('express-session');
+const session = require("express-session");
 
 // Serve static files from the 'public' directory
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // Set the view engine to EJS
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Session middleware
 app.use(session({
-  secret: 'your_secret_key', // Use a strong secret in production
-  resave: false,
-  saveUninitialized: true
+    secret: "your_secret_key", // Use a strong secret in production
+    resave: false,
+    saveUninitialized: true,
 }));
 
 // Middleware for error handling
 function errorHandler(err, req, res, next) {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 }
 
 // Route for the home page
-app.get('/', (req, res) => {
-    const sql = 'SELECT * FROM products';
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('Error fetching products:', err);
-            return res.status(500).send('Internal Server Error');
-        }
-        res.render('index', { products: results });
-    });
+app.get("/", (req, res) => {
+  const sql = "SELECT * FROM products";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching products:", err);
+      return res.status(500).send("Internal Server Error");
+    }
+    res.render("index", { products: results });
+  });
 });
 
 // Route for the products page
-app.get('/products', (req, res) => {
+app.get("/products", (req, res) => {
     const sql = 'SELECT * FROM products';
     db.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching products:', err);
             return res.status(500).send('Internal Server Error');
         }
-        res.render('products', { products: results });
+    res.render("products", { products: results });
     });
 });
 
 // Route to get a specific product by ID
-app.get('/products/:id', (req, res) => {
-    const sql = 'SELECT * FROM products WHERE id = ?';
-    db.query(sql, [req.params.id], (err, results) => {
+app.get("/products/:id", (req, res) => {
+  const sql = "SELECT * FROM products WHERE id = ?";
+  db.query(sql, [req.params.id], (err, results) => {
         if (err) {
-            console.error('Error fetching product:', err);
+      console.error("Error fetching product:", err);
             return res.status(500).send('Internal Server Error');
-        } else if (results.length === 0) {
-            return res.status(404).send('Product not found');
+    } else if (results.length === 0) {
+      return res.status(404).send("Product not found");
         }
-        res.render('productDetail', { product: results[0] });
+    res.render("productDetail", { product: results[0] });
     });
 });
 
 // Cart routes
-app.get('/cart', (req, res) => {
-    if (!Array.isArray(req.session.cart)) {
-        req.session.cart = []; // Initialize cart if it doesn't exist
+app.get("/cart", (req, res) => {
+  if (!Array.isArray(req.session.cart)) {
+    req.session.cart = []; // Initialize cart if it doesn't exist
     }
 
-    const total = req.session.cart.reduce((acc, item) => {
-        return acc + (item.product.price * item.quantity);
-    }, 0);
+  const total = req.session.cart.reduce((acc, item) => {
+    return acc + item.product.price * item.quantity;
+  }, 0);
 
-    res.render('cart', { cartItems: req.session.cart, total: total });
+  res.render("cart", { cartItems: req.session.cart, total: total });
 });
 
 // Route to add an item to the cart
-app.post('/cart/add', (req, res) => {
-    const productId = req.body.productId;
+app.post("/cart/add", (req, res) => {
+  const productId = req.body.productId;
 
-    // Validate productId
-    if (!productId || isNaN(productId)) {
-        return res.status(400).json({ error: 'Invalid or missing Product ID' });
+  // Validate productId
+  if (!productId || isNaN(productId)) {
+    return res.status(400).json({ error: "Invalid or missing Product ID" });
     }
 
-    // Query database to get product details
+  // Query database to get product details
     db.query('SELECT * FROM products WHERE id = ?', [productId], (error, results) => {
-        if (error) {
-            console.error('Database error:', error);
+      if (error) {
+        console.error("Database error:", error);
             return res.status(500).json({ error: 'Server error while fetching product' });
         }
 
-        if (results.length === 0) {
-            return res.status(404).json({ error: 'Product not found' });
+      if (results.length === 0) {
+        return res.status(404).json({ error: "Product not found" });
         }
 
         const product = results[0];
