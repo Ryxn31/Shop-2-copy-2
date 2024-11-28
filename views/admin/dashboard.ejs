@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #4CAF50;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            margin: 0 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .stat-card p {
+            margin: 0.5rem 0 0;
+            font-size: 1.2rem;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .links a {
+            display: inline-block;
+            margin: 0 1rem;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            background: #4CAF50;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        .links a:hover {
+            background: #45a049;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <h2><%= productCount %></h2>
+                <p>Products</p>
+            </div>
+            <div class="stat-card">
+                <h2><%= orderCount %></h2>
+                <p>Orders</p>
+            </div>
+            <div class="stat-card">
+                <h2><%= userCount %></h2>
+                <p>Users</p>
+            </div>
+        </div>
+
+        <div class="links">
+            <a href="/">Go to Homepage</a>
+            <a href="/admin/products">Manage Products</a>
+            <a href="/admin/orders">Manage Orders</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> Admin Dashboard. All rights reserved.</p>
+    </footer>
+</body>
+</html>
